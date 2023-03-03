@@ -1,0 +1,112 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title MyChatApp
+  link(rel='stylesheet' href='/css/style.css')
+  link(rel='preconnect' href='https://fonts.googleapis.com')
+  link(rel='preconnect' href='https://fonts.googleapis.com')
+  link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+  link(href='https://fonts.googleapis.com/css2?family=Open+Sans&display=swap' rel='stylesheet')
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css')
+  script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+  script(src="/socket.io/socket.io.js")
+.container
+  .menu
+    .settings
+      .logo
+        | ChatApp
+      .setting
+        a(href='#')
+          i.fa-solid.fa-plus
+        a(href='#')
+          i.fa-solid.fa-gear
+    .searchBtn
+      input(type='text' disabled='' value='' style='text-align: center;font-family: FontAwesome;width: 10%;border-radius: 5px 0 0 5px;')
+      input(type='text' placeholder='Search Here...' style='width: 90%;border-radius: 0 5px 5px 0;')
+    .icons
+      ul
+        li
+          a(href='#')
+            i.active.fa-sharp.fa-solid.fa-clock-rotate-left
+        li
+          a(href='#')
+            i.fa-regular.fa-star
+        li
+          a(href='#')
+            i.fa-regular.fa-address-book
+        li
+          a(href='#')
+            i.fa-regular.fa-bookmark
+    hr
+    .messageList
+      each user in allUser
+        if(user.id != mainUser.id)
+          .message( id=user.id onclick=`openMessage('${mainUser.id}','${user.id}','${user.fullName}', '${user.mail}', '${user.photo}')`)
+            .personIcon
+              img(src=`img/${user.photo}`)
+            .messageInfo
+              .personName
+                | #{user.fullName}
+              .personMessage#lastMessage
+                | Yeni bir sohbet başlat...
+    hr
+    .mainUser
+      img(src=`img/${mainUser.photo}`)
+      h2 #{mainUser.fullName}
+      a(href='/')
+        i.fa-solid.fa-right-from-bracket
+  .messageBox
+    .messageHead
+      .name#name
+        | Size Özel Sohbet Alanı
+      .callIcons
+        i.fa-solid.fa-phone
+        i.fa-solid.fa-video
+    .messageContent#output
+      //- Js ile Mesaj içeriği gelecek
+    .feedback#feedback
+      |
+    .sendMessage
+      input#sender(type="hidden" value=`${mainUser.fullName}`)
+      input#roomId(type="hidden")
+      input(type='text' placeholder='Birşeyler yaz...' maxLength='100' id='message')
+      .sendIcons
+        i.fa-sharp.fa-regular.fa-face-smile
+        i.fa-solid.fa-paperclip
+        i.fa-solid.fa-paper-plane#submitBtn(style='background-color: #007AFF;color: #f2f2f2;')
+  .personelInfo
+    .closeTag
+      a(href='#')
+        i.fa-solid.fa-xmark
+    .bigIcon
+      img#img(src='img/icon4.png' alt='')
+      h2 
+    .infoList
+      ul
+        li
+          i.fa-solid.fa-location-dot
+          span#adress
+        li
+          i.fa-solid.fa-mobile
+          span#phone 
+        li
+          i.fa-solid.fa-envelope
+          span#mail 
+    .media
+      h2 Media
+      ul
+        li
+          img(src='img/activity1.png')
+        li
+          img(src='img/kulturel.jpg')
+        li
+          img(src='img/social2.png')
+        li
+          img(src='img/spor.png')
+          div
+          span 6 +
+
+script(src="js/script.js") 
+script(src="js/message.js") 
