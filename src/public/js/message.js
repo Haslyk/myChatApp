@@ -2,13 +2,14 @@ let socket = io()
 
 
 /* Person Info */
+const noPI = document.getElementById('noPI')
 const userInfoName = document.querySelector('.bigIcon h2')
-const userInfoAdress = document.getElementById('adress')
-const userInfoPhone = document.getElementById('phone')
+const userInfoUserName = document.getElementById('username')
 const userInfoMail = document.getElementById('mail')
 const userInfoPhoto = document.getElementById('img')
 
 /* Message Box */
+const noMsg = document.getElementById('noMsg')
 const name = document.getElementById('name')
 const roomId = document.getElementById('roomId')
 const output = document.getElementById('output')
@@ -19,41 +20,26 @@ const sender = document.getElementById('sender').value
 const submitBtn = document.getElementById('submitBtn')
 
 
-const roomIds = {
-    "1-2" : "room1",
-    "2-1" : "room1",
-    "1-3" : "room2",
-    "3-1" : "room2",
-    "2-3" : "room3",
-    "3-2" : "room3",
-}
+let users = []
 
-const users = [
-    {
-        userId: 1,
-        name : "Halim Aslıyüksek",
-        address : "Merkez, Yalova",
-        phone : "02695-565-1245",
-        photo : "icon4.png"
-    },
-    {
-        userId: 2,
-        name : "Ali Veli",
-        address : "Çiftlikköy, Yalova",
-        phone : "5134-42-67899",
-        photo : "icon1.png"
-    },
-    {
-        userId: 3,
-        address : "Çınarcık, Yalova",
-        name : "Veli Ali",
-        phone : "46661-13-531",
-        photo : "icon3.png"
-    },
-]
+fetch('/users')
+    .then((response) => response.json())
+    .then((data) => {
+        users = data.map((user) => {
+            return {
+                userId: user.id,
+                name: user.fullName,
+                mail : user.mail,
+                photo: user.photo
+            };
+        });
+        console.log(users)
+    });
 
-function openMessage(mainUserId, userid, _name, _mail, _photo)
+function openMessage(mainUserId, userid, _name, _username ,_mail, _photo)
 {
+    noMsg.style.display = 'none'
+    noPI.style.display = 'none'
     const messageBtn = document.getElementById(`${userid}`)    
     const activeMsg = document.querySelector('.active')
 
@@ -61,21 +47,25 @@ function openMessage(mainUserId, userid, _name, _mail, _photo)
     activeMsg.classList.remove('active')
     messageBtn.classList.toggle('active')
     
-    for (let i = 0; i < users.length; i++) {
-        if(users[i].userId == userid)
-        {
-            const user = users[i]
-            userInfoName.innerHTML = _name
-            userInfoAdress.innerHTML = user.address
-            userInfoPhone.innerHTML = user.phone
-            userInfoMail.innerHTML = _mail
-            userInfoPhoto.src = 'img/' + _photo
-        }
-    }
+    userInfoName.innerHTML = _name
+    userInfoUserName.innerHTML = _username
+    userInfoMail.innerHTML = _mail
+    userInfoPhoto.src = 'img/' + _photo
 
     name.innerHTML = _name
-    roomId.value = roomIds[mainUserId+'-'+userid]
-    socket.emit('joinRoom', {roomId : roomId.value})
+
+    fetch('/rooms')
+        .then((response) => response.json())
+        .then((data) => {
+            data.find((item) => {
+                if(item.userIds.includes(mainUserId) && item.userIds.includes(userid))
+                {
+                    roomId.value = item.roomId
+                }
+                
+            })
+            socket.emit('joinRoom', { roomId: roomId.value });
+    });
 }
 
 socket.on('connect', () => {
@@ -92,9 +82,10 @@ submitBtn.addEventListener('click', () => {
     message.value = ''
 })
 
+
 socket.on('chat', (data) => {
     let photo
-    for(var i = 0; i < 3 ; i++)
+    for(var i = 0; i < users.length; i++)
     {
         if(users[i].name == data.sender){
             photo = users[i].photo
@@ -134,15 +125,30 @@ socket.on('chat', (data) => {
     }
 })
 
+
 message.addEventListener('keypress', () => {
     socket.emit('typing', {
         sender : sender,
-        roomId : roomId.value
+        roomId : roomId.value,
+        typing : true
+    })
+})
+
+message.addEventListener('blur', () => {
+    socket.emit('typing', {
+        sender : sender,
+        roomId : roomId.value,
+        typing : false
     })
 })
 
 socket.on('typing', (data) => {
-    feedback.innerHTML = '<p>' + data + ' yazıyor...</p>'
+    if(data.typing){
+        feedback.innerHTML = '<p>' +  data.sender + ' yazıyor...</p>'
+    }
+    else {
+        feedback.innerHTML = ''
+    }
 })
 
 

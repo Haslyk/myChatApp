@@ -43,7 +43,7 @@ head
     .messageList
       each user in allUser
         if(user.id != mainUser.id)
-          .message( id=user.id onclick=`openMessage('${mainUser.id}','${user.id}','${user.fullName}', '${user.mail}', '${user.photo}')`)
+          .message( id=user.id onclick=`openMessage('${mainUser.id}','${user.id}','${user.fullName}', '${user.username}' ,'${user.mail}', '${user.photo}')`)
             .personIcon
               img(src=`img/${user.photo}`)
             .messageInfo
@@ -58,14 +58,15 @@ head
       a(href='/')
         i.fa-solid.fa-right-from-bracket
   .messageBox
+    .noMessage#noMsg
+      h1 Bir kişi seçin ve sohbete başlayın..
     .messageHead
-      .name#name
-        | Size Özel Sohbet Alanı
+      .name#name 
+        |
       .callIcons
         i.fa-solid.fa-phone
         i.fa-solid.fa-video
     .messageContent#output
-      //- Js ile Mesaj içeriği gelecek
     .feedback#feedback
       |
     .sendMessage
@@ -77,6 +78,7 @@ head
         i.fa-solid.fa-paperclip
         i.fa-solid.fa-paper-plane#submitBtn(style='background-color: #007AFF;color: #f2f2f2;')
   .personelInfo
+    .noMessage#noPI
     .closeTag
       a(href='#')
         i.fa-solid.fa-xmark
@@ -86,11 +88,8 @@ head
     .infoList
       ul
         li
-          i.fa-solid.fa-location-dot
-          span#adress
-        li
-          i.fa-solid.fa-mobile
-          span#phone 
+          i.fa-solid.fa-user
+          span#username
         li
           i.fa-solid.fa-envelope
           span#mail 

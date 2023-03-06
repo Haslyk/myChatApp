@@ -6,7 +6,7 @@ const userGetAll = async (req,res) => {
 
             const user = req.user
             const getAllQuery = `SELECT * from users`
-            
+
             db.query(getAllQuery, (error, result) => {
                 if(result){
                     res.render('homepage', {allUser : result, mainUser: user})

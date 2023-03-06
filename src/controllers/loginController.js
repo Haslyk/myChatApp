@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken')
 
 const login = async (req,res) => {
     try {
-        const info = req.body
-        console.log(info)
-        const checkQuery = `select * from users where username = '${info.username}' && password ='${info.password}'`
+        const item = req.body
+        console.log(item)
+        const checkQuery = `select * from users where username = '${item.username}' && password ='${item.password}'`
         db.query(checkQuery, (error, result) => {
             if(result[0])
             {
@@ -28,8 +28,8 @@ const login = async (req,res) => {
 const register = async ( req,res) => {
     try {
 
-        const info = req.body
-        const checkQuery = `select * from users where mail = '${info.mail}'`
+        const item = req.body
+        const checkQuery = `select * from users where mail = '${item.mail}'`
         db.query(checkQuery, (error, result) => {
             if(result[0])
             {
@@ -37,8 +37,10 @@ const register = async ( req,res) => {
             }
             else
             {
-                const insertQuery = `INSERT INTO users(fullName,username, password, mail) values('${info.fullName}','${info.username}', '${info.password}', '${info.mail}')`;
-                db.query(insertQuery)
+                const insertUserQuery = `INSERT INTO users(fullName,username, password, mail) values('${item.fullName}','${item.username}', '${item.password}', '${item.mail}')`;
+                db.query(insertUserQuery)
+
+                createRoom()
                 
                 res.redirect('/')
             }
@@ -54,6 +56,19 @@ const register = async ( req,res) => {
 const createToken = (userId) => {
     return jwt.sign({userId}, process.env.JWT_SECRET, {
         expiresIn: '1d',
+    })
+}
+
+const createRoom = () => {
+    const users = 'select * from users'
+
+    db.query(users, (error, result) => {
+        let insertRoomQuery;
+        const lastUser = Object.keys(result).length -1
+        for(var i = 0; i < Object.keys(result).length - 1; i++){
+            insertRoomQuery = `INSERT INTO rooms(userIds) values('${result[i].id}-${result[lastUser].id}')`
+            db.query(insertRoomQuery)
+        }
     })
 }
 
