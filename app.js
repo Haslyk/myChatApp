@@ -21,18 +21,6 @@ app.use(express.static(__dirname + '/src/public'));
 app.use(express.static(__dirname + '/src/views'));
 app.use(express.static("."));
 
-app.get('/rooms', (req,res) => {
-    const query = 'SELECT roomId,userIds FROM rooms';
-    db.query(query, (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('An error occurred while retrieving rooms.');
-        } else {
-            res.status(200).json(result);
-        }
-    });
-});
-
 app.get('/users', (req,res) => {
     const query = 'SELECT * FROM users';
     db.query(query, (err, result) => {

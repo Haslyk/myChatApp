@@ -33,13 +33,14 @@ fetch('/users')
                 photo: user.photo
             };
         });
-        console.log(users)
     });
+
 
 function openMessage(mainUserId, userid, _name, _username ,_mail, _photo)
 {
     noMsg.style.display = 'none'
     noPI.style.display = 'none'
+    
     const messageBtn = document.getElementById(`${userid}`)    
     const activeMsg = document.querySelector('.active')
 
@@ -54,18 +55,15 @@ function openMessage(mainUserId, userid, _name, _username ,_mail, _photo)
 
     name.innerHTML = _name
 
-    fetch('/rooms')
-        .then((response) => response.json())
-        .then((data) => {
-            data.find((item) => {
-                if(item.userIds.includes(mainUserId) && item.userIds.includes(userid))
-                {
-                    roomId.value = item.roomId
-                }
-                
-            })
-            socket.emit('joinRoom', { roomId: roomId.value });
-    });
+    if(mainUserId < userid){
+        roomId.value = mainUserId+"-"+userid
+    }
+    else {
+        roomId.value = userid+"-"+mainUserId
+    }
+
+    socket.emit('joinRoom', { roomId: roomId.value });
+    
 }
 
 socket.on('connect', () => {

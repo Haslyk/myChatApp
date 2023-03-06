@@ -40,7 +40,7 @@ const register = async ( req,res) => {
                 const insertUserQuery = `INSERT INTO users(fullName,username, password, mail) values('${item.fullName}','${item.username}', '${item.password}', '${item.mail}')`;
                 db.query(insertUserQuery)
 
-                createRoom()
+                // createRoom()
                 
                 res.redirect('/')
             }
