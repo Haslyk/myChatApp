@@ -5,7 +5,7 @@ const userGetAll = async (req,res) => {
         if(req.user) {
 
             const user = req.user
-            const getAllQuery = `SELECT * from users`
+            const getAllQuery = `SELECT * from users where id != ${user.id}`
 
             db.query(getAllQuery, (error, result) => {
                 if(result){
@@ -15,19 +15,13 @@ const userGetAll = async (req,res) => {
                     console.log("Tüm kullanıcılar alınamadı")
                 }
             })
-
-
-
-            
-            }
-            else {
-                console.log("Olmadı!")
-                res.redirect('/')
-            }
-        
+        } else {
+            console.log("Olmadı!")
+            res.redirect('/')
+        }
 
     } catch (error) {
-        
+        console.log(error)
     }
 }
 

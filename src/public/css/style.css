@@ -51,12 +51,25 @@ body {
     margin-bottom: 2%!important;
 }
 .searchBtn input {
+    width: 85%;
     height: 30px;
-    padding: 2%;
+    padding: 2% 3%;
     background-color: #3596FF;
+    color: #fff;
     border: none;
+    border-radius: 0 5px 5px 0;
     line-height: 100px;
 }
+.searchBtn button {
+    width: 15%;
+    background-color: #3596FF;
+    border: none;
+    border-right: 1px solid #cccc;
+    border-radius: 5px 0 0 5px;
+    color: #ececec;
+    cursor: pointer;
+}
+
 .searchBtn input::placeholder {
     color: #ececec;
     font-size: 1em;

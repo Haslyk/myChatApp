@@ -23,8 +23,9 @@ head
         a(href='#')
           i.fa-solid.fa-gear
     .searchBtn
-      input(type='text' disabled='' value='' style='text-align: center;font-family: FontAwesome;width: 10%;border-radius: 5px 0 0 5px;')
-      input(type='text' placeholder='Search Here...' style='width: 90%;border-radius: 0 5px 5px 0;')
+      button#searchBtn
+        i.fa-solid.fa-magnifying-glass
+      input#searchMsg(type='text' placeholder='Kullanıcı arayın...')
     .icons
       ul
         li
@@ -40,21 +41,21 @@ head
           a(href='#')
             i.fa-regular.fa-bookmark
     hr
-    .messageList
+    .messageList#msgList
       each user in allUser
-        if(user.id != mainUser.id)
-          .message( id=user.id onclick=`openMessage('${mainUser.id}','${user.id}','${user.fullName}', '${user.username}' ,'${user.mail}', '${user.photo}')`)
-            .personIcon
-              img(src=`img/${user.photo}`)
-            .messageInfo
-              .personName
-                | #{user.fullName}
-              .personMessage#lastMessage
-                | Yeni bir sohbet başlat...
+        .message( id=user.id onclick=`openMessage('${mainUser.id}','${user.id}','${user.fullName}', '${user.username}' ,'${user.mail}', '${user.photo}')`)
+          .personIcon
+            img(src=`img/${user.photo}`)
+          .messageInfo
+            .personName
+              | #{user.fullName}
+            .personMessage#lastMessage
+              | Yeni bir sohbet başlat...
     hr
     .mainUser
       img(src=`img/${mainUser.photo}`)
       h2 #{mainUser.fullName}
+      input(type="hidden" id='mainId' value=mainUser.id)
       a(href='/')
         i.fa-solid.fa-right-from-bracket
   .messageBox

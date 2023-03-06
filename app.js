@@ -6,7 +6,7 @@ const socket = require('./src/middlewares/socketio')
 const db = require('./src/config/db')
 
 const app = express()
-const server = app.listen(5000)
+const server = app.listen(5000, "0.0.0.0")
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
