@@ -38,10 +38,7 @@ const register = async ( req,res) => {
             else
             {
                 const insertUserQuery = `INSERT INTO users(fullName,username, password, mail) values('${item.fullName}','${item.username}', '${item.password}', '${item.mail}')`;
-                db.query(insertUserQuery)
-
-                // createRoom()
-                
+                db.query(insertUserQuery)              
                 res.redirect('/')
             }
         })    
@@ -58,20 +55,6 @@ const createToken = (userId) => {
         expiresIn: '1d',
     })
 }
-
-const createRoom = () => {
-    const users = 'select * from users'
-
-    db.query(users, (error, result) => {
-        let insertRoomQuery;
-        const lastUser = Object.keys(result).length -1
-        for(var i = 0; i < Object.keys(result).length - 1; i++){
-            insertRoomQuery = `INSERT INTO rooms(userIds) values('${result[i].id}-${result[lastUser].id}')`
-            db.query(insertRoomQuery)
-        }
-    })
-}
-
 
 module.exports = {
     login,
